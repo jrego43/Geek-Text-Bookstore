@@ -2,6 +2,8 @@ package com.geektext.bookstore.profile;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.hibernate.id.IntegralDataTypeHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,9 @@ public class ProfileController {
     public ProfileController(ProfileService profileService){
         this.profileService = profileService;
     }
+
+    @Autowired
+    public CardRepository cardRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -40,14 +45,13 @@ public class ProfileController {
         profileService.deleteProfile(id);
     }
 
-    @PutMapping(path = "/{profile_id}")
+    @PutMapping(path = "/update/{profile_id}")
     public void updateProfile(
             @PathVariable("profile_id") Long profile_id,
             @RequestParam(required=false) String username,
             @RequestParam(required=false) String password,
             @RequestParam(required=false) String full_name,
             @RequestParam(required=false) String home_address){
-        
         profileService.updateProfile(profile_id,username,password,full_name,home_address);
     }
 
@@ -61,5 +65,12 @@ public class ProfileController {
     public void registerNewCustomer(@RequestBody Profile customer){
         profileService.addNewProfile(customer);
     }
+
+    @PutMapping(path = "/creditCard/{profile_id}")
+    public void addNewCard(
+        @PathVariable("profile_id") Long profile_id,
+        @RequestParam(required=false) String cNumber){
+            profileService.addNewCard(profile_id,cNumber);
+        }
 
 }

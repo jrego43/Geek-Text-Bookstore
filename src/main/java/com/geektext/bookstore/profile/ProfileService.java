@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     private final ProfileRepository pRepository;
+    private final CardRepository cRepository;
 
     @Autowired
-    public ProfileService(ProfileRepository pRepository){
+    public ProfileService(ProfileRepository pRepository, CardRepository cRepository){
         this.pRepository = pRepository;
+        this.cRepository = cRepository;
     }
 
     public List<Profile> getProfiles(){
@@ -23,13 +25,6 @@ public class ProfileService {
     }
 
     public void addNewProfile(Profile profile){
-        // Optional<Profile> profileByUsername = pRepository.findProfileByUsername(profile.getUsername());
-        // if(profileByUsername.isPresent()){
-        //     System.out.println(profile.toString());
-        // }
-        // else{
-        //     throw new IllegalStateException("Profile not found with that username... Try Again.");
-        // }
         if(profile.getUsername() == null){
             throw new IllegalArgumentException("Username is required... Try again!");
         }
@@ -40,6 +35,14 @@ public class ProfileService {
             pRepository.save(profile);
         }
         //System.out.println(profile);
+    }
+
+    @Transactional
+    public void addNewCard(Long profile_id, String cNumber){
+        Profile profile = pRepository.findById(profile_id)
+            .orElseThrow(()->new IllegalStateException("profile does not exist..."));
+        
+        profile.inputNewCard(cNumber);
     }
 
     public void deleteProfile(Long id) {
@@ -70,6 +73,7 @@ public class ProfileService {
             profile.setHomeAddress(home_address);
         }
 	}
+
 }
 
 

@@ -17,7 +17,7 @@ public class ProfileController {
     }
     
     @GetMapping(path="/{profile_id}")
-    public @ResponseBody Optional<Profile> getProfileById(Long profile_id) {
+    public @ResponseBody Optional<Profile> getProfileById(@PathVariable Long profile_id) {
         System.out.println("Getting all profiles...");
         return profileRepository.findById(profile_id);
     }
